@@ -54,9 +54,9 @@ function parseSCSS(filename) {
   const fileContents = fs.readFileSync(filename).toString();
   const ast = parse(fileContents);
   const queryWrapper = createQueryWrapper(ast);
-  const imports = queryWrapper(IMPORT_RULE_TYPE).nodes.map(
-    (node) => node.children[2].node.value,
-  );
+  const imports = queryWrapper(IMPORT_RULE_TYPE).nodes
+    .filter((node) => node.node.value.find(s => s.type === 'atkeyword' && s.value === 'import'))
+    .map((node) => node.children[2].node.value);
 
   const result = lodash(imports)
     .filter((packagePath) => packagePath !== filename)
